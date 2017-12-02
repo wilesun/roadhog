@@ -22,6 +22,8 @@ export default function (args, appBuild, config, paths) {
   const { watch, debug, analyze } = args;
   const NODE_ENV = debug ? 'development' : process.env.NODE_ENV;
 
+  baseSvgLoader.options.name = config.hash?'lib/asset/[name].[hash:8].[ext]':'lib/asset/[name].[ext]';
+
   const {
     publicPath = '/',
     library = null,
@@ -39,10 +41,10 @@ export default function (args, appBuild, config, paths) {
 
   const output = {
     path: appBuild,
-    filename: `${jsFileName}.js`,
+    filename: `lib/js/${jsFileName}.js`,
     publicPath,
     libraryTarget,
-    chunkFilename: `${jsFileName}.async.js`,
+    chunkFilename: `lib/js/async/${jsFileName}.async.js`,
   };
 
   if (library) output.library = library;
@@ -66,7 +68,7 @@ export default function (args, appBuild, config, paths) {
         new webpack.optimize.DedupePlugin(),
       ]),
       new ExtractTextPlugin({
-        filename: `${cssFileName}.css`,
+        filename: `lib/css/${cssFileName}.css`,
         allChunks: true,
       }),
       ...getCommonPlugins({
